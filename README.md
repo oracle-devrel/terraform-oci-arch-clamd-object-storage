@@ -62,7 +62,7 @@ endpoint = "https://cell-1.streaming.sa-saopaulo-1.oci.oraclecloud.com"
 
 ## Deploy Using Oracle Resource Manager
 
-1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/oracle-devrel/terraform-oci-arch-clamd-object-storage/releases/latest/download/oci-arch-clamd-object-storage-stack-latest.zip)
+1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/oracle-devrel/terraform-oci-arch-clamd-object-storage/releases/latest/download/terraform-oci-arch-clamd-object-storage-stack-latest.zip)
 
     If you aren't already signed in, when prompted, enter the tenancy and user credentials.
 
@@ -129,7 +129,7 @@ When you no longer need the deployment, you can run this command to destroy the 
 ### To scan your bucket do the following:
 1. Get a small python script called scan_bucket.py and run it to check for virus and move infected objects to quarantine.
 ```
-wget https://raw.githubusercontent.com/oracle-quickstart/oci-arch-clamd-object-storage/main/scripts/scan_bucket.py
+wget https://raw.githubusercontent.com/oracle-devrel/terraform-oci-arch-clamd-object-storage/main/scripts/scan_bucket.py
 sudo python3 scan_bucket.py <your_bucket_name> quarantine
 ```
 
@@ -140,7 +140,7 @@ sudo python3 scan_bucket.py <your_bucket_name> quarantine
    
    You need to provide source and target buckets and streaming OCID and endpoint that you can get from OCI console or terraform output
 ```
-wget https://raw.githubusercontent.com/oracle-quickstart/oci-arch-clamd-object-storage/main/scripts/scan_obj_create.py
+wget https://raw.githubusercontent.com/oracle-devrel/terraform-oci-arch-clamd-object-storage/main/scripts/scan_obj_create.py
 sudo python3 scan_obj_create.py checkinobj quarantine <stream_ocid> <stream_endpoint> 
 ```
 

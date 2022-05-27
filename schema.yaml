@@ -98,7 +98,6 @@
       instance_shape:
         type: oci:core:instanceshape:name
         required: false
-        default: "VM.Standard.E3.Flex"
         title: "Instance Shape"
         description: "Shape of the VM used for ScanInstance."
         dependsOn:
