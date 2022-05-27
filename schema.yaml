@@ -1,0 +1,156 @@
+## Copyright © 2022, Oracle and/or its affiliates. 
+## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+    title: "Create Low cost Antivirus for Oracle Cloud object store"
+    stackDescription: "Deploy Low cost Antivirus for Oracle Cloud object store."
+    schemaVersion: 1.1.0
+    version: "20190404"
+    locale: "en"
+
+    variableGroups:
+    - title: General Configuration
+      visible: false
+      variables:
+      - tenancy_ocid
+      - region
+      - release
+
+    - title: Required Configuration
+      visible: true  
+      variables:
+      - compartment_ocid
+      - availability_domain_name 
+      - show_advanced       
+
+    - title: Networking Optional Configuration
+      visible: 
+          and:
+            - show_advanced
+      variables:      
+      - ScanVCN_CIDR
+      - Scan_subnet_public_CIDR
+
+    - title: Compute Instance Optional Configuration
+      visible: 
+          and:
+            - show_advanced
+      variables: 
+      - ssh_public_key
+      - instance_shape
+      - instance_flex_shape_ocpus
+      - instance_flex_shape_memory
+    
+    variables:
+      
+      show_advanced:
+        type: boolean
+        title: "Show advanced options?"
+        description: "Shows advanced options."
+        visible: true
+        default: false
+
+      compartment_ocid:
+        type: oci:identity:compartment:id
+        required: true
+        visibile: true
+        title: Compartment
+        description: "Compartment where you want to create the solution resources"
+
+      region:
+        type: oci:identity:region:name
+        required: true
+        visibile: true
+        title: Region
+        description: "Region where you want to deploy the resources defined by this stack."
+
+      availability_domain_name:
+        type: oci:identity:availabilitydomain:name
+        required: true
+        visibile: true
+        title: "Availability Domain to be chosen"
+        description: "Choose Availability Domain where your infrastructure will be deployed."
+        dependsOn:
+          regionName: ${region}
+          compartmentId: ${compartment_ocid}
+
+      # Optional Configuration
+      ScanVCN_CIDR:
+         type: string
+         required: false
+         default: "172.16.0.0/16"
+         pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"
+         description: "VCN CIDR block where you want to create the solution resources."
+
+      Scan_subnet_public_CIDR:
+         type: string
+         required: false
+         default: "172.16.0.0/24"
+         pattern: "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]).(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\/(3[0-2]|[1-2]?[0-9])$"
+         description: "Public subnet's CIDR block where you want to place your ScanInstance."
+
+
+      ssh_public_key:
+        type: oci:core:ssh:publickey
+        title: "Public SSH Key"
+        description: "Choose public SSH Key to be uploaded into compute instances."
+        required: false
+
+      instance_shape:
+        type: oci:core:instanceshape:name
+        required: false
+        title: "Instance Shape"
+        description: "Shape of the VM used for ScanInstance."
+        dependsOn:
+          compartmentId: ${compartment_ocid}
+
+      instance_flex_shape_ocpus:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 1
+        title: "Flex Shape OCPUs"
+        description: "Choose number of OCPUs for Flex Shape."
+        visible:
+          and:
+            - or:
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E3.Flex"
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E4.Flex"
+
+      instance_flex_shape_memory:
+        type: number
+        required: false
+        minimum: 1
+        maximum: 128
+        multipleOf: 1
+        default: 10
+        title: "Flex Shape Memory (GB)"
+        description: "Choose number GB for Flex Shape Memory."
+        visible:
+          and:
+            - or:
+              - eq:
+                - instance_shape 
+                - "VM.Standard.E3.Flex"
+              - eq:
+                - instance_shape
+                - "VM.Standard.E4.Flex"
+
+      release:
+        type: string
+        required: false
+        visible: false
+        title: "Reference Architecture Release (OCI Architecture Center)"
+
+    outputs:
+      
+      generated_ssh_private_key:
+        title: "Generated SSH Private Key"
+        displayText: "Generated SSH Private Key"
+        type: string
+        visible: true
