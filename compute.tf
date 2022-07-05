@@ -22,7 +22,7 @@ data "template_cloudinit_config" "cloud_init" {
 resource "oci_core_instance" "ScanInstance" {
   display_name        = "ScanInstance" 
   compartment_id      = oci_identity_compartment.ScanCompart.id
-  availability_domain = var.availability_domain == "" ? lookup(data.oci_identity_availability_domains.ADs.availability_domains[0], "name") : var.availability_domain_name
+  availability_domain = var.availability_domain_name == "" ? lookup(data.oci_identity_availability_domains.ADs.availability_domains[0], "name") : var.availability_domain_name
   shape               = var.instance_shape
 
   dynamic "shape_config" {
